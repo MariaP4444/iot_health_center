@@ -1,0 +1,4 @@
+flask==2.3.3         # Para REST
+websockets==12.0     # Para WebSockets
+grpcio==1.62.0       # Para gRPC
+grpcio-tools==1.62.0 # Para compilar archivos .proto si se usan

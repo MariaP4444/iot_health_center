@@ -1,0 +1,2 @@
+paho-mqtt==1.6.1        # Cliente MQTT
+psycopg2-binary==2.9.10 # Para conectarse a PostgreSQL
