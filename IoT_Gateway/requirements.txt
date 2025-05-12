@@ -1,4 +1,5 @@
-grpcio==1.56.0
+grpcio==1.62.0
+grpcio-tools==1.62.0
 Flask==2.2.3
 Flask-SocketIO==5.3.3
 paho-mqtt==1.6.1

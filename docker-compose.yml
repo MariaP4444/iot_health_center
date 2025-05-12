@@ -1,79 +1,23 @@
 version: '3.8'
 
 services:
-  # Sensor 1: Temperatura
-  sensor_temp:
-    build:
-      context: ./Sensores
-    container_name: sensor01
-    # environment:
-    #   SENSOR_TYPE: temperatura
-    depends_on:
-      - iot_gateway
-
-  # Sensor 2: Ritmo cardíaco
-  sensor_hr:
-    build:
-      context: ./Sensores
-    container_name: sensor02
-    # environment:
-    #   SENSOR_TYPE: ritmo_cardiaco
-    depends_on:
-      - iot_gateway
-
-  # Sensor 3: Presión arterial
-  sensor_bp:
-    build:
-      context: ./Sensores
-    container_name: sensor03
-    # environment:
-    #   SENSOR_TYPE: presion_arterial
-    depends_on:
-      - iot_gateway
-
-  #  IoT Gateway
   iot_gateway:
     build:
       context: ./IoT_Gateway
     container_name: iot_gateway
     ports:
-      - "5000:5000"     # REST
-      - "6000:6000"     # WebSocket
-      - "7000:7000"     # gRPC
-    depends_on:
-      - mqtt_broker
-
-  #  MQTT Broker (Mosquitto)
-  mqtt_broker:
-    image: eclipse-mosquitto
-    container_name: mqtt_broker
-    ports:
-      - "1883:1883"     # Puerto MQTT
-    volumes:
-      - ./Mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
-
-  #  Suscriptor MQTT
-  mqtt_subscriber:
+      - "50051:50051"
+    networks:
+      - iot_net
+  sensor_grpc:
     build:
-      context: ./MQTT_Subscriber
-    container_name: mqtt_subscriber
+      context: ./Sensores/SensorGRPC
+    container_name: sensor_grpc
     depends_on:
-      - mqtt_broker
-      - postgres_db
+      - iot_gateway
+    networks:
+      - iot_net
 
-  #  Base de datos PostgreSQL
-  postgres_db:
-    image: postgres
-    container_name: postgres_db
-    restart: always
-    environment:
-      POSTGRES_USER: usuario
-      POSTGRES_PASSWORD: clave123
-      POSTGRES_DB: salud_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-volumes:
-  pgdata:
+networks:
+  iot_net:
+    driver: bridge
