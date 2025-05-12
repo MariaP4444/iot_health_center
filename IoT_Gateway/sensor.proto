@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package sensor;
+
 service SensorService {
     rpc SendData (SensorData) returns (SensorResponse);
 }
