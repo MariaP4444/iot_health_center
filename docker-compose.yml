@@ -8,6 +8,7 @@ services:
     ports:
       - "50051:50051"
       - "5000:5000"
+      - "8000:8000"
     networks:
       - iot_net
 
@@ -23,6 +24,16 @@ services:
   sensor_ws:
     build:
       context: ./Sensores/SensorWS
+    container_name: sensor_ws
+    depends_on:
+      - iot_gateway
+    networks:
+      - iot_net
+
+  sensor_rest:
+    build:
+      context: ./Sensores/SensorRest
+    container_name: sensor_rest
     depends_on:
       - iot_gateway
     networks:
