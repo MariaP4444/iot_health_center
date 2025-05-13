@@ -64,7 +64,10 @@ iot_health_center/
 │   │   ├── Dockerfile
 │   │   ├── requirements.txt
 │   │   └── client.py
-│
+│   └── SensorWs/                   # Sensor usando WebSockets
+│         │── client.py
+│         │── Dockerfile
+│         └── requirements.txt 
 ├── DB/
 │   └── init.sql                    # Script para crear tablas
 │
