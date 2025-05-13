@@ -15,10 +15,13 @@ def on_message(client, userdata, msg):
     print(f"[MQTT] Mensaje recibido en {msg.topic}: {msg.payload.decode()}", flush=True)
     try:
         # Parsear JSON del mensaje recibido
-        data = json.loads(msg.payload.decode('utf-8'))
+        payload = msg.payload.decode()
+        payload = payload.replace("'", '"')
+        data = json.loads(payload)
         id_sensor = data.get('id')
-        
-        valor = False 
+        print("Dataaaaaaaaaa: ", data, flush=True)
+
+        valor = None 
         if (data.get('temperature')):
             valor = data.get('temperature')
         elif (data.get('blood_pressure')):
@@ -39,7 +42,7 @@ def on_message(client, userdata, msg):
         cursor = conn.cursor()
         # Insertar en la tabla sensores
         cursor.execute(
-            "INSERT INTO log_sensores (id_sensor, valor, time) VALUES (%i, %s, to_timestamp(%s))",
+                "INSERT INTO log_sensores (id_sensor, valor, time) VALUES (%s, %s, to_timestamp(%s, 'YYYY-MM-DD\"T\"HH24:MI:SS.US'))",
             (id_sensor, valor, timestamp)
         )
         
