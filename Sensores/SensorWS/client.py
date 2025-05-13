@@ -20,7 +20,7 @@ async def send_heart_rate():
             await websocket.send(json.dumps(data))
             
             response = await websocket.recv()
-            print(f'Response: {response.message}', flush=True)
+            print(f'Response: {response}', flush=True)
 
             await asyncio.sleep(60)
 
