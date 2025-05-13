@@ -5,6 +5,8 @@ services:
     build:
       context: ./IoT_Gateway
     container_name: iot_gateway
+    depends_on:
+      - mqtt
     ports:
       - "50051:50051"
       - "5000:5000"
@@ -38,6 +40,19 @@ services:
       - iot_gateway
     networks:
       - iot_net
+
+  mqtt:
+    image: eclipse-mosquitto:2.0
+    container_name: mqtt
+    ports:
+      - "1883:1883"
+    networks:
+      - iot_net
+    volumes:
+      - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+
 
 networks:
   iot_net:

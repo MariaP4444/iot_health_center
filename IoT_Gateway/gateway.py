@@ -5,26 +5,50 @@ import threading
 import asyncio
 import websockets
 from flask import Flask, request
-
+import paho.mqtt.client as mqtt 
 
 import sensor_pb2_grpc
 from grpc_handler import GRPCSensorService
 from websocket_handler import WSSensorService
 
+# === MQTT Client ===
+mqtt_client = mqtt.Client()
+mqtt_client.connect("mqtt", 1883, 60)  # 'mqtt' es el nombre del contenedor del broker en docker-compose
+
+def publish_to_mqtt(data):
+    mqtt_client.publish("sensor/data", str(data))
+    print(f"[MQTT] Published: {data}", flush=True)
+
 # === gRPC Server ===
+class GRPCSensorServiceWithMQTT(GRPCSensorService):
+    def SendData(self, request, context):
+        data = {
+            "id": request.id,
+            "temperature": request.temperature,
+            "timestamp": request.timestamp
+        }
+        print(f"[gRPC] Received: {data}", flush=True)
+        publish_to_mqtt(data)
+        return super().SendData(request, context)
+
 def start_grpc_server():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    sensor_pb2_grpc.add_SensorServiceServicer_to_server(GRPCSensorService(), server)
+    sensor_pb2_grpc.add_SensorServiceServicer_to_server(GRPCSensorServiceWithMQTT(), server)
     server.add_insecure_port('[::]:50051')
     print("[gRPC] Starting server on port 50051...", flush=True)
     server.start()
     return server
 
 # === WebSocket Server ===
+async def WSSensorServiceWithMQTT(websocket, path):
+    async for message in websocket:
+        print(f"[WebSocket] Received: {message}", flush=True)
+        publish_to_mqtt(message)
+
 def start_websocket_server():
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    start_server = websockets.serve(WSSensorService, "0.0.0.0", 5000)
+    start_server = websockets.serve(WSSensorServiceWithMQTT, "0.0.0.0", 5000)
     print("[WebSocket] Starting server on port 5000...", flush=True)
     loop.run_until_complete(start_server)
     loop.run_forever()
@@ -35,7 +59,8 @@ app = Flask(__name__)
 @app.route('/data', methods=['POST'])
 def receive_rest_data():
     data = request.json
-    print(f"[REST] Received data: ID={data.get('id')}, Blood Pressure={data.get('blood_pressure')}, Timestamp={data.get('timestamp')}", flush=True)
+    print(f"[REST] Received: {data}", flush=True)
+    publish_to_mqtt(data)
     return "REST data received", 200
 
 def start_rest_server():
