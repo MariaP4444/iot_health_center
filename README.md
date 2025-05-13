@@ -4,6 +4,10 @@ Este proyecto implementa un sistema de IoT para el sector de salud que recopila 
 
 ### Prerrequisitos
 - Docker y Docker Compose
+
+### Arquitectura del sistema
+
+
 ### Estructura del Proyecto
 
 ```
@@ -45,9 +49,13 @@ iot_health_center/
 
 ```
 ### Ejecución
- Inicia los servicios con Docker Compose:
+1.  Inicia los servicios con Docker Compose:
    ```bash
    docker-compose up --build
+   ```
+2. Para parar los contenedores
+  ```bash
+   docker-compose down
    ```
 
 ### Componentes del sistema
@@ -56,15 +64,26 @@ iot_health_center/
     - __SensorRest:__ Envía datos de presión arterial mediante el protocolo REST.
     - __SensorwS:__ Envía datos de ritmo cardíaco mediante el protocolo Websocket.
 2. ### IoT_Gateway
-  Recibe los datos de los sensores (por gRPC o REST), los procesa y los publica en un topic MQTT (salud/datos) para su posterior almacenamiento. Actúa como puente entre los sensores y el resto del sistema.
+Recibe los datos de los sensores (por gRPC o REST), los procesa y los publica en un topic MQTT (salud/datos) para su posterior almacenamiento. Actúa como puente entre los sensores y el resto del sistema.
 
 3. ### Broker MQTT (Mosquitto)
-  Es el intermediario de mensajería. Se encarga de recibir y distribuir los mensajes publicados por el gateway a todos los suscriptores interesados. 
+Es el intermediario de mensajería. Se encarga de recibir y distribuir los mensajes publicados por el gateway a todos los suscriptores interesados. 
 
 4. ### MQTT Subscriber
-  Se suscribe al tópico MQTT donde se publican los datos médicos. Cada mensaje recibido es insertado en la base de datos PostgreSQL para su almacenamiento y análisis posterior.
+Se suscribe al tópico MQTT donde se publican los datos médicos. Cada mensaje recibido es insertado en la base de datos PostgreSQL para su almacenamiento y análisis posterior.
 
 5. ### Base de Datos (PostgreSQL)
-   Almacena toda la información recibida de los sensores, organizada por paciente y con su respectiva marca temporal. Es la base del sistema de almacenamiento para análisis futuros.
+Almacena toda la información recibida de los sensores, organizada por paciente y con su respectiva marca temporal. Es la base del sistema de almacenamiento para análisis futuros.
+
+### Diseño base de datos
+
+
+### Puertos utilizados
+- __Gateway:__
+    - _gRPC:_ Port  50051
+    - _REST:_ Port  8000
+    - _Websocket:_ Port  5000
+- __MQTT Broker:__ Port  1883
+- __postgres:__ Port  5432
 
   
