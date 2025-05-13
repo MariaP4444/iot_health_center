@@ -19,7 +19,6 @@ def on_message(client, userdata, msg):
         payload = payload.replace("'", '"')
         data = json.loads(payload)
         id_sensor = data.get('id')
-        print("Dataaaaaaaaaa: ", data, flush=True)
 
         valor = None 
         if (data.get('temperature')):
