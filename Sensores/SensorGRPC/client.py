@@ -12,12 +12,13 @@ def run():
     while True:
             data = sensor_pb2.SensorData(
                 id="sensor-grpc-1",
-                temperature=round(random.uniform(20.0, 30.0), 2),
+                temperature=round(random.uniform(10.0, 40.0), 2),
                 timestamp=datetime.utcnow().isoformat()
             )
+            print(f"Sent data: {data}", flush=True)
             response = stub.SendData(data)
-            print(f"Sent data: {data} | Response: {response.message}")
-            time.sleep(5)
+            print(f"Response: {response.message}", flush=True)
+            time.sleep(60)
 
 if __name__ == '__main__':
     run()

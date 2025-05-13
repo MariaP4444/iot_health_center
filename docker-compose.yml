@@ -7,12 +7,22 @@ services:
     container_name: iot_gateway
     ports:
       - "50051:50051"
+      - "5000:5000"
     networks:
       - iot_net
+
   sensor_grpc:
     build:
       context: ./Sensores/SensorGRPC
     container_name: sensor_grpc
+    depends_on:
+      - iot_gateway
+    networks:
+      - iot_net
+  
+  sensor_ws:
+    build:
+      context: ./Sensores/SensorWS
     depends_on:
       - iot_gateway
     networks:
