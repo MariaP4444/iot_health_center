@@ -5,7 +5,7 @@ import threading
 import asyncio
 import websockets
 from flask import Flask, request
-import paho.mqtt.client as mqtt 
+import paho.mqtt.client as mqtt
 
 import sensor_pb2_grpc
 from grpc_handler import GRPCSensorService

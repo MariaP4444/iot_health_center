@@ -8,7 +8,7 @@ GATEWAY_URL = "http://iot_gateway:8000/data"  # Dirección del gateway REST
 def run():
     while True:
         data = {
-            "id": "sensor-rest-1",
+            "id": 2,
             "blood_pressure": round(random.uniform(80.0, 120.0), 1),  # presión simulada
             "timestamp": datetime.utcnow().isoformat()
         }
@@ -17,7 +17,7 @@ def run():
             print(f"Sent: {data} | Response: {response.text}", flush=True)
         except Exception as e:
             print("Error sending data:", e)
-        time.sleep(5)
+        time.sleep(60)
 
 if __name__ == '__main__':
     run()

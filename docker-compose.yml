@@ -53,6 +53,35 @@ services:
       - ./mosquitto/data:/mosquitto/data
       - ./mosquitto/log:/mosquitto/log
 
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: iot_db
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - iot_net
+
+  subscriber:
+    build: 
+      context: ./MQTT_Subscriber
+    container_name: subscriber
+    depends_on:
+      - mqtt
+      - postgres
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=iotdb
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    networks:
+      - iot_net
+
 
 networks:
   iot_net:

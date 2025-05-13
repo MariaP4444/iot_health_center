@@ -11,7 +11,7 @@ def run():
     stub = sensor_pb2_grpc.SensorServiceStub(channel)
     while True:
             data = sensor_pb2.SensorData(
-                id="sensor-grpc-1",
+                id=1,
                 temperature=round(random.uniform(10.0, 40.0), 2),
                 timestamp=datetime.utcnow().isoformat()
             )

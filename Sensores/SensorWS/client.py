@@ -9,8 +9,9 @@ async def send_heart_rate():
     async with websockets.connect(uri) as websocket:
         while True:
             data = {
-                "id": "sensor-ws-heart-1",
-                "heart_rate": random.randint(60, 100),                                                                                "timestamp": datetime.utcnow().isoformat()
+                "id": 3,
+                "heart_rate": random.randint(60, 100), 
+                "timestamp": datetime.utcnow().isoformat()
             }
            
             print(f'Sent data: id: "{data["id"]}"', flush=True)

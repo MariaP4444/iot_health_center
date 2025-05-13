@@ -7,9 +7,9 @@ service SensorService {
 }
 
 message SensorData {
-    string id = 1;
-      float temperature = 2;
-        string timestamp = 3;
+    int32 id = 1;
+    float temperature = 2;
+    string timestamp = 3;
 }
 
 message SensorResponse {
