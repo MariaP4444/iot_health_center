@@ -19,9 +19,9 @@ Se suscribe al tópico MQTT donde se publican los datos médicos. Cada mensaje r
 5. ### Base de Datos (PostgreSQL)
 Almacena toda la información recibida de los sensores, organizada por paciente y con su respectiva marca temporal. Es la base del sistema de almacenamiento para análisis futuros.
 ### Arquitectura del sistema
-
+![](Esquemas/arquitectura.png)
 ### Diseño base de datos
-
+![](Esquemas/BaseDeDatos.png)
 ### Puertos utilizados
 - __Gateway:__
     - _gRPC:_ Port  50051
