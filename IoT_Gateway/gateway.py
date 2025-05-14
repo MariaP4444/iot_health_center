@@ -44,6 +44,7 @@ async def WSSensorServiceWithMQTT(websocket, path):
     async for message in websocket:
         print(f"[WebSocket] Received: {message}", flush=True)
         publish_to_mqtt(message)
+        await websocket.send("")
 
 def start_websocket_server():
     loop = asyncio.new_event_loop()
